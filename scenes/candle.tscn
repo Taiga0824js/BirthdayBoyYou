@@ -1,0 +1,63 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/candle.gd" id="1_candle"]
+
+[sub_resource type="CylinderMesh" id="CandleBodyMesh"]
+top_radius = 0.075
+bottom_radius = 0.075
+height = 0.72
+radial_segments = 24
+
+[sub_resource type="StandardMaterial3D" id="CandleBodyMat"]
+albedo_color = Color(0.95, 0.86, 0.55, 1)
+roughness = 0.7
+
+[sub_resource type="CylinderMesh" id="WickMesh"]
+top_radius = 0.012
+bottom_radius = 0.012
+height = 0.10
+radial_segments = 12
+
+[sub_resource type="StandardMaterial3D" id="WickMat"]
+albedo_color = Color(0.08, 0.06, 0.05, 1)
+roughness = 1.0
+
+[sub_resource type="SphereMesh" id="FlameMesh"]
+radius = 0.11
+height = 0.26
+radial_segments = 24
+rings = 12
+
+[sub_resource type="StandardMaterial3D" id="FlameMat"]
+albedo_color = Color(1, 0.33, 0.03, 1)
+emission_enabled = true
+emission = Color(1, 0.19, 0.01, 1)
+emission_energy_multiplier = 4.0
+roughness = 0.25
+
+[node name="Candle" type="Node3D"]
+script = ExtResource("1_candle")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.36, 0)
+mesh = SubResource("CandleBodyMesh")
+material_override = SubResource("CandleBodyMat")
+
+[node name="Wick" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.77, 0)
+mesh = SubResource("WickMesh")
+material_override = SubResource("WickMat")
+
+[node name="Flame" type="Node3D" parent="."]
+position = Vector3(0, 0.92, 0)
+scale = Vector3(0.70, 1.15, 0.70)
+
+[node name="FlameMesh" type="MeshInstance3D" parent="Flame"]
+mesh = SubResource("FlameMesh")
+material_override = SubResource("FlameMat")
+
+[node name="FlameLight" type="OmniLight3D" parent="Flame"]
+light_color = Color(1, 0.44, 0.16, 1)
+light_energy = 1.4
+omni_range = 2.8
+shadow_enabled = false

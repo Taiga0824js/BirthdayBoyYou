@@ -1,0 +1,25 @@
+Birthday Boy You - custom audio
+
+Put your prepared audio files in this exact folder:
+
+assets/audio/custom/
+
+Use these filenames:
+
+title.mp3
+    ONE BGM used continuously for both the title intro and the main menu.
+    There is no separate menu track anymore, so the music will not overlap.
+
+candle_out.wav  (or .mp3 / .ogg)
+    Candle extinguish SE.
+
+applause.wav  (or .mp3 / .ogg)
+    Applause after the final birthday candle goes out.
+
+eat.wav  (or .mp3 / .ogg)
+    Cake eating SE.
+
+menu.mp3 is no longer required and is intentionally ignored.
+
+If a custom sound is missing, the built-in fallback is used.
+After copying files here, open Godot and wait for audio import to finish.
