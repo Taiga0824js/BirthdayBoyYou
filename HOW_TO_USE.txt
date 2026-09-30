@@ -1,0 +1,17 @@
+Birthday Boy You GitHub Auto Build Setup
+
+1. Copy these files into the repository root.
+2. Push:
+   git add .
+   git commit -m "Add automatic Windows and macOS builds"
+   git push
+
+Every push builds Windows + macOS in GitHub Actions.
+
+For a public downloadable release:
+   git tag v0.1.0
+   git push origin v0.1.0
+
+GitHub automatically creates a Release with:
+- BirthdayBoyYou-Windows.zip
+- BirthdayBoyYou-macOS.zip

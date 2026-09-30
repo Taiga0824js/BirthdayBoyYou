@@ -1,0 +1,92 @@
+name: Build Birthday Boy You
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Build Windows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Godot 4.7
+        uses: lihop/setup-godot@v3
+        with:
+          version: 4.7-stable
+          export-templates: true
+
+      - name: Build
+        run: |
+          mkdir -p build/windows
+          godot --headless --path . --export-release "Windows Desktop" build/windows/BirthdayBoyYou.exe
+          cd build/windows
+          zip -r ../BirthdayBoyYou-Windows.zip .
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: BirthdayBoyYou-Windows
+          path: build/BirthdayBoyYou-Windows.zip
+          if-no-files-found: error
+
+  macos:
+    name: Build macOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Godot 4.7
+        uses: lihop/setup-godot@v3
+        with:
+          version: 4.7-stable
+          export-templates: true
+
+      - name: Build
+        run: |
+          mkdir -p build/macos
+          godot --headless --path . --export-release "macOS" build/macos/BirthdayBoyYou-macOS.zip
+
+      - name: Upload macOS build
+        uses: actions/upload-artifact@v4
+        with:
+          name: BirthdayBoyYou-macOS
+          path: build/macos/BirthdayBoyYou-macOS.zip
+          if-no-files-found: error
+
+  release:
+    name: Publish Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs:
+      - windows
+      - macos
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Windows build
+        uses: actions/download-artifact@v4
+        with:
+          name: BirthdayBoyYou-Windows
+          path: release
+
+      - name: Download macOS build
+        uses: actions/download-artifact@v4
+        with:
+          name: BirthdayBoyYou-macOS
+          path: release
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}"             release/BirthdayBoyYou-Windows.zip             release/BirthdayBoyYou-macOS.zip             --repo "${GITHUB_REPOSITORY}"             --title "Birthday Boy You ${GITHUB_REF_NAME}"             --generate-notes
